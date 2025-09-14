@@ -21,6 +21,7 @@ driver_has_date = []
 with open(poll_csv_file, newline='') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',', quotechar='|')
     header = next(csv_reader)
+    all_dates = header[2:]
     for row in csv_reader:
         driver = row[0]
         for vote, date in zip(row[2:], header[2:]):
@@ -74,3 +75,8 @@ for date in dates:
 # Print the solution
 if g1.hamCycle(debug):
     g1.printAssignment(drivers, dates)
+
+# Check for dates without assigned drivers
+for date in all_dates:
+    if date not in dates:
+        print(f"Warning: Date '{date}' has no drivers assigned.")
