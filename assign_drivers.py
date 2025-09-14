@@ -80,3 +80,15 @@ if g1.hamCycle(debug):
 for date in all_dates:
     if date not in dates:
         print(f"Warning: Date '{date}' has no drivers assigned.")
+
+# Check for drivers without assigned dates
+assigned_drivers = []
+last = -1
+for vertex in g1.path:
+    label = g1.labels[vertex]
+    if label in dates:
+        assigned_drivers.append(g1.labels[last])
+    last = vertex
+for driver in is_driver.keys():
+    if driver not in assigned_drivers:
+        print(f"Warning: Driver '{driver}' has no dates assigned.")
