@@ -5,14 +5,21 @@ import sys
 import hamilton_cycle.graph as hc
 
 # Driver assignment
+def usage():
+    print(f"Usage: {sys.argv[0]} <poll_csv_file> [debug]")
+    sys.exit(1)
+
+if len(sys.argv) < 2:
+    usage()
+
 poll_csv_file = sys.argv[1]
-debug = len(sys.argv) > 2 != ""
+debug = len(sys.argv) > 2 and sys.argv[2] != ""
 
 yes_vote_text = "Ich kann"
 
 driver_has_date = []
 with open(poll_csv_file, newline='') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',', quotechar='|')
+    csv_reader = csv.reader(csv_file, delimiter=';', quotechar='|')
     header = next(csv_reader)
     for row in csv_reader:
         driver = row[0]
