@@ -1,25 +1,25 @@
-# Python program for solution of hamiltonian cycle problem
-
+# Driver assignment with hamiltonian cycles
 import csv
 import sys
+import argparse
 import hamilton_cycle.graph as hc
 
-# Driver assignment
-def usage():
-    print(f"Usage: {sys.argv[0]} <poll_csv_file> [debug]")
-    sys.exit(1)
+# Parse command line arguments
+parser = argparse.ArgumentParser(description="Assign drivers to dates based on poll CSV.")
+parser.add_argument("poll_csv_file", help="Path to the poll CSV file")
+parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+parser.add_argument("--sort_drivers", action="store_true", help="Sort drivers by number of dates they indicated")
+args = parser.parse_args()
 
-if len(sys.argv) < 2:
-    usage()
-
-poll_csv_file = sys.argv[1]
-debug = len(sys.argv) > 2 and sys.argv[2] != ""
+poll_csv_file = args.poll_csv_file
+debug = args.debug
+sort_drivers = args.sort_drivers
 
 yes_vote_text = "Ich kann"
 
 driver_has_date = []
 with open(poll_csv_file, newline='') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=';', quotechar='|')
+    csv_reader = csv.reader(csv_file, delimiter=',', quotechar='|')
     header = next(csv_reader)
     for row in csv_reader:
         driver = row[0]
@@ -32,6 +32,14 @@ with open(poll_csv_file, newline='') as csv_file:
                 next
             if (vote == yes_vote_text):
                 driver_has_date.extend([{'driver': driver, 'date': date}])
+
+# count dates for each driver
+if sort_drivers:
+    n_dates_per_driver = {}
+    for edge in (driver_has_date):
+        n_dates_per_driver[edge['driver']] = n_dates_per_driver.get(edge['driver'], 0) + 1
+    # sort drivers by number of dates they can drive
+    driver_has_date.sort(key=lambda x: n_dates_per_driver[x['driver']])
 
 is_driver = {}
 is_date = {}
